@@ -1,47 +1,42 @@
 package com.senac.estruturas;
 
-public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
-
-	private T chave;
+public class Nodo<T> {
+	private T data;
 	private Nodo<T> next;
+	private Nodo<T> prev;
 	
 	public Nodo()
 	{
-		this.chave = null;
-		this.next = null;
-	}
-	
-	public Nodo(T valor)
-	{
-		this.chave = valor;
-		this.next = null;
-	}
-	
-	public T getData()
-	{
-		return chave;
-	}
-	
- 	private void setData(T chave)
- 
-	{
-		this.chave = chave;
+		data = null;
+		next = null;
 	}
 
-	
-	public Nodo<T> getNext()
-	{
+	public Nodo(T chave) {
+		this.data = chave;
+		this.next = null;
+	}
+
+	public T getData() {
+		return data;
+	}
+
+	public void setData(T data) {
+		this.data = data;
+	}
+
+	public Nodo<T> getNext() {
 		return next;
 	}
-	
-	public void setNext(Nodo<T> next)
-	{
+
+	public void setNext(Nodo<T> next) {
 		this.next = next;
 	}
 
-	@Override
-	public int compareTo(Nodo<T> nodo) {
-		return chave.compareTo(nodo.getData());
+	public Nodo<T> getPrevious() {
+		return prev;
 	}
 
+	public void setPrevious(Nodo<T> prev) {
+		this.prev = prev;
+	}
 }

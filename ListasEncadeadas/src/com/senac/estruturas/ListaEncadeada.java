@@ -1,62 +1,67 @@
 package com.senac.estruturas;
 
-import static java.lang.System.out;
+public class ListaEncadeada<T> {
 
-public class ListaEncadeada<T extends Comparable<T>> {
-	
-	private Nodo<T> head; // will be a Nodo
-	private Nodo<T> tail; // will be a Nodo
-	
-	public Nodo<T> getHead()
-	{
-		return head;
+	protected Nodo<T> head;
+	protected Nodo<T> tail;
+
+	public ListaEncadeada() {
+		head = null;
+		tail = null;
 	}
-	
-	public void print()
-	{
-		Nodo<?> nodo = head;
-		do {
-			out.println(nodo.getData());
-			nodo = nodo.getNext();
-		} while (nodo != null);
-	}
-	
-	public void insert(Nodo<T> novo)
-	{
+
+	public void insert(Nodo<T> novo) {
 		novo.setNext(head);
+		if (head != null)
+			head.setPrevious(novo);
 		head = novo;
-		
 		if (tail == null)
-			tail = head;
+			tail = novo;
 	}
 
-	public void insert(Nodo<T> novo, Nodo<T> anterior)
-	{
-		if (anterior == tail) {
-			tail.setNext((Nodo<T>)novo);
-			tail = novo;
+	public void insert(Nodo<T> novo, Nodo<T> anterior) {
+		if (anterior == null) {
+			novo.setNext(head);
+			head = novo;
+			if (tail == null)
+				tail = head;
 		} else {
 			novo.setNext(anterior.getNext());
+			novo.setPrevious(anterior);
 			anterior.setNext(novo);
+			if (anterior == tail)
+				tail = novo;
 		}
 	}
 
-	public void append(Nodo<T> novo)
-	{
-		tail.setNext(novo);
+	public void append(Nodo<T> novo) {
+		if (tail != null) {
+			tail.setNext(novo);
+			novo.setPrevious(tail);
+		} else {
+			head = novo;
+		}
 		tail = novo;
 	}
-	
-	public static void main(String[] args)
-	{
-		ListaEncadeada<String> lista = new ListaEncadeada<String>();
-		
-		lista.insert(new Nodo<String>("Rafael"));
-		lista.insert(new Nodo<String>("Tiago"), lista.getHead());
-		lista.append(new Nodo<String>("Mauro"));
-		lista.insert(new Nodo<String>("Carlos"));
-		
-		lista.print();
+
+	public Nodo<T> getTail() {
+		return tail;
 	}
 
+	public Nodo<T> getHead() {
+		return head;
+	}
+
+	public void remove(Nodo<T> nodo) {
+		Nodo<T> ant = nodo.getPrevious();
+		Nodo<T> next = nodo.getNext();
+		if (ant != null)
+			ant.setNext(next);
+		else
+			head = next;
+		if (next != null)
+			next.setPrevious(ant);
+		else
+			tail = ant;
+	}
 }

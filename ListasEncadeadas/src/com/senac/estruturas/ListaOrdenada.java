@@ -1,63 +1,55 @@
 package com.senac.estruturas;
 
 public class ListaOrdenada<T extends Comparable<T>> extends ListaEncadeada<T> {
-
-	private Nodo<T> findBefore(Nodo<T> novo) {
+	
+	public Nodo<T> procuraNodo(Nodo<T> needle) {
 		Nodo<T> atual = getHead();
 		Nodo<T> anterior = null;
-		
+		T chaveNeedle = needle.getData();
+
 		while (atual != null) {
-			int comp = atual.compareTo(novo);
-			if (comp < 0) {
-				anterior = atual;
-				atual = atual.getNext();
-			}
-			if (comp == 0)
+			T chaveAtual = atual.getData();
+			int cmp = chaveNeedle.compareTo(chaveAtual);
+			if (cmp == 0)
 				return atual;
-			if (comp > 0)
+			if (cmp < 0)
 				return anterior;
+			anterior = atual;
+			atual = atual.getNext();
 		}
-		
 		return anterior;
 	}
-	
+
 	@Override
-	public void insert(Nodo<T> novo)
-	{
-		Nodo<T> anterior = findBefore(novo);
+	public void append(Nodo<T> novo) {
+		insert(novo);
+	}
+
+	@Override
+	public void insert(Nodo<T> novo, Nodo<T> anterior) {
+		insert(novo);
+	}
+
+	@Override
+	public void insert(Nodo<T> novo) {
+		Nodo<T> anterior = procuraNodo(novo);
+
 		if (anterior == null) {
-			super.insert(novo);
+			novo.setNext(head);
+			if (head != null)
+				head.setPrevious(novo);
+			head = novo;
+			if (tail == null)
+				tail = novo;
 		} else {
-			super.insert(novo, anterior);
+			Nodo<T> prox = anterior.getNext();
+			novo.setNext(prox);
+			novo.setPrevious(anterior);
+			anterior.setNext(novo);
+			if (tail == anterior)
+				tail = novo;
+			else
+				prox.setPrevious(novo);
 		}
 	}
-
-
-	@Override
-	public void insert(Nodo<T> novo, Nodo<T> anterior)
-	{
-		insert(novo);
-	}
-	
-	@Override
-	public void append(Nodo<T> novo)
-	{
-		insert(novo);
-	}
-	
-	
-	public static void main(String[] args) {
-		ListaOrdenada<String> lista = new ListaOrdenada<String>();
-		
-		lista.insert(new Nodo<String>("Rafael"));
-		lista.insert(new Nodo<String>("Tiago"), lista.getHead());
-		lista.append(new Nodo<String>("Mauro"));
-		lista.insert(new Nodo<String>("Carlos"));
-		lista.insert(new Nodo<String>("Raffael"));
-		lista.insert(new Nodo<String>("Rafael"));
-		lista.insert(new Nodo<String>("Raphael"));
-		
-		lista.print();
-	}
-
 }
